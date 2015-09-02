@@ -28,8 +28,11 @@ memtime <- function
   free.profile.start(free.file)
   Sys.sleep(sleep.seconds)
   time <- proc.time()
-  on.exit(cat("Timing stopped at:", ppt(proc.time() - time), 
-              "\n"))
+  on.exit({
+    free.profile.stop(free.file)
+    cat("Time/memory measurement stopped at:", ppt(proc.time() - time), 
+        "\n")
+  })
   expr
   new.time <- proc.time()
   Sys.sleep(sleep.seconds)
