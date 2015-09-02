@@ -1,12 +1,17 @@
 memtime <- function
-### Compute time and memory usage of R code.
+### Compute time and memory usage of R code. WARNING: since memory
+### usage is measured using free, it includes all running process
+### (even background processes which are not relevant to the R code,
+### expr). Memory usage numbers are only interpretable for your R code
+### when there is constant background process activity on your entire
+### system!
 (expr,
 ### R code.
  gcFirst = TRUE,
 ### Run gc before computing initial time/memory values?
  free.file=tempfile(),
 ### file where free output will be written.
- sleep.seconds=0.1
+ sleep.seconds=1
 ### Seconds to wait before/after calling free.profile.start/stop.
  ){
   ppt <- function(y) {
@@ -38,9 +43,9 @@ memtime <- function
   first <- used.values[1]
   max.mem <- max(used.values)
   megabytes <- 
-    c(first=first,
-      max=max.mem,
-      last=used.values[length(used.values)],
+    c(first.used=first,
+      max.used=max.mem,
+      last.used=used.values[length(used.values)],
       max.increase=max.mem-first,
       total=firstValue(free.lines[2]))
   on.exit()
