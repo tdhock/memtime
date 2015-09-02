@@ -42,15 +42,16 @@ memtime <- function
   used.values <- firstValue(used.lines)
   first <- used.values[1]
   max.mem <- max(used.values)
-  megabytes <- 
+  kilobytes <- 
     c(first.used=first,
       max.used=max.mem,
       last.used=used.values[length(used.values)],
       max.increase=max.mem-first,
       total=firstValue(free.lines[2]))
+  megabytes <- as.integer(kilobytes/1024)
   on.exit()
   list(time=structure(new.time - time, class = "proc_time"),
-       memory=data.frame(megabytes))
+       memory=data.frame(kilobytes, megabytes))
 ### List of time and memory usage.
 }
 
