@@ -1,0 +1,11 @@
+memtime
+
+A drop-in replacement for system.time that also computes memory usage
+information using the free command line program.
+
+#+BEGIN_SRC R
+devtools::install_github("tdhock/memtime")
+memtime({
+  some.code
+})
+#+END_SRC

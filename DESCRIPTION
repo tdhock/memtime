@@ -1,0 +1,8 @@
+Package: memtime
+Maintainer: Toby Dylan Hocking <tdhock5@gmail.com>
+Author: Toby Dylan Hocking
+Version: 2015.09.02
+License: GPL-3
+Title: Memory and time usage of R code
+Description: memtime is a drop-in replacement for system.time that also 
+ computes memory usage via the free command line program.
