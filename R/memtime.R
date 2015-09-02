@@ -25,14 +25,16 @@ memtime <- function
     return(rep(NA_real_, 5L))
   if (gcFirst) 
     gc(FALSE)
+  on.exit({
+    free.profile.stop(free.file)
+  })
   free.profile.start(free.file)
   Sys.sleep(sleep.seconds)
   time <- proc.time()
   on.exit({
-    free.profile.stop(free.file)
     cat("Time/memory measurement stopped at:", ppt(proc.time() - time), 
         "\n")
-  })
+  }, add=TRUE)
   expr
   new.time <- proc.time()
   Sys.sleep(sleep.seconds)

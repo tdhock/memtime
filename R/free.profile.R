@@ -20,7 +20,11 @@ free.profile.stop <- function
   stopifnot(length(free.file) == 1)
   DONE.file <- paste0(free.file, ".DONE")
   cat("", file=DONE.file)
-  readLines(free.file)
+  if(file.exists(free.file)){
+    readLines(free.file)
+  }else{
+    character()
+  }
 ### character vector of lines written to free.file.
 }
 
