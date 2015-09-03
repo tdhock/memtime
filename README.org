@@ -4,8 +4,53 @@ A drop-in replacement for system.time that also computes memory usage
 information using the free command line program.
 
 #+BEGIN_SRC R
-devtools::install_github("tdhock/memtime")
-memtime({
-  some.code
-})
+  devtools::install_github("tdhock/memtime")
+  library(memtime)
+  ## Example: mclapply uses more memory than lapply!
+  library(parallel)
+  N <- 1000000
+  memtime({
+    mclapply(1:N, function(i)NULL, mc.cores=4)
+  })
+  memtime({
+    lapply(1:N, function(i)NULL)
+  })
 #+END_SRC
+
+The output I got on my machine was:
+
+#+BEGIN_SRC 
+> memtime({
++   mclapply(1:N, function(i)NULL, mc.cores=4)
++ })
+$time
+   user  system elapsed 
+  0.644   0.132   0.688 
+
+$memory
+             kilobytes megabytes
+first.used     1307748      1277
+max.used       1574536      1537
+last.used      1343528      1312
+max.increase    266788       260
+total         12295384     12007
+
+> memtime({
++   lapply(1:N, function(i)NULL)
++ })
+$time
+   user  system elapsed 
+  0.524   0.004   0.528 
+
+$memory
+             kilobytes megabytes
+first.used     1318148      1287
+max.used       1320076      1289
+last.used      1318872      1287
+max.increase      1928         1
+total         12295384     12007
+
+> 
+#+END_SRC
+
+More about this example (results, discussion, figure) at https://github.com/tdhock/mclapply-memory
