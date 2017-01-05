@@ -54,3 +54,5 @@ total         12295384     12007
 #+END_SRC
 
 More about this example (results, discussion, figure) at https://github.com/tdhock/mclapply-memory
+
+See also: https://github.com/shinra-dev/memuse
