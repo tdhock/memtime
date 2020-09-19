@@ -3,10 +3,21 @@ memtime
 A drop-in replacement for system.time that also computes memory usage
 information using the free command line program.
 
+Note that free measures total memory usage on the system, so it
+includes any/all background processes. This is deliberate -- when
+total memory usage maxes out, paging/thrashing begins (and this is
+what we are trying to avoid in most cases when memory is an issue).
+
+** Installation
+
 #+BEGIN_SRC R
   devtools::install_github("tdhock/memtime")
+#+END_SRC
+
+** Usage example: mclapply uses more memory than lapply!
+
+#+BEGIN_SRC R
   library(memtime)
-  ## Example: mclapply uses more memory than lapply!
   library(parallel)
   N <- 1000000
   memtime({
@@ -17,7 +28,7 @@ information using the free command line program.
   })
 #+END_SRC
 
-The output I got on my machine was:
+In 2015 the output I got on my machine was:
 
 #+BEGIN_SRC 
 > memtime({
@@ -53,6 +64,11 @@ total         12295384     12007
 > 
 #+END_SRC
 
-More about this example (results, discussion, figure) at https://github.com/tdhock/mclapply-memory
+More about this example (results, discussion, figure) at
+https://github.com/tdhock/mclapply-memory
 
-See also: https://github.com/shinra-dev/memuse
+** Related work
+
+See also: 
+- https://github.com/shinra-dev/memuse
+- bench::mark
