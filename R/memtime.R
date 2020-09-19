@@ -1,4 +1,4 @@
-memtime <- function
+memtime <- structure(function
 ### Compute time and memory usage of R code. WARNING: since memory
 ### usage is measured using free, it includes all running process
 ### (even background processes which are not relevant to the R code,
@@ -39,24 +39,35 @@ memtime <- function
   new.time <- proc.time()
   Sys.sleep(sleep.seconds)
   free.lines <- free.profile.stop(free.file)
-  firstValue <- function(txt){
-    value <- sub(".*? ([0-9]+) .*", "\\1", txt)
-    as.numeric(value)
-  }
-  used.lines <- grep("-/+", free.lines, value=TRUE)
-  used.values <- firstValue(used.lines)
+  int <- function(g)list(" *", nc::group(g, "[0-9]+", as.integer))
+  free.dt <- nc::capture_all_str(
+    free.lines, "Mem:", int("total"), int("used"))
+  used.values <- free.dt[["used"]]
   first <- used.values[1]
   max.mem <- max(used.values)
-  kilobytes <- 
-    c(first.used=first,
-      max.used=max.mem,
-      last.used=used.values[length(used.values)],
-      max.increase=max.mem-first,
-      total=firstValue(free.lines[2]))
+  kilobytes <- c(
+    first.used=first,
+    max.used=max.mem,
+    last.used=used.values[length(used.values)],
+    max.increase=max.mem-first)
   megabytes <- as.integer(kilobytes/1024)
   on.exit()
   list(time=structure(new.time - time, class = "proc_time"),
        memory=data.frame(kilobytes, megabytes))
 ### List of time and memory usage.
-}
+}, ex=function(){
+
+  library(memtime)
+  ## Example: mclapply uses more memory than lapply! (compare
+  ## max.increase rows)
+  library(parallel)
+  N <- 10000
+  memtime({
+    mclapply(1:N, function(i)NULL, mc.cores=2)
+  })
+  memtime({
+    lapply(1:N, function(i)NULL)
+  })
+  
+})
 

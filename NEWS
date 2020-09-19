@@ -2,6 +2,10 @@ TODO
 
 use https://github.com/shinra-dev/memuse
 
+2020.9.18
+
+use nc instead of grep/gsub in memtime.
+
 2015.09.02
 
 first version using free
